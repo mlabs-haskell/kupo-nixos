@@ -17,12 +17,23 @@
   };
   outputs = inputs@{self, ...}:
     let
+      pins = (__fromJSON (__readFile ./flake.lock)).nodes;
+      haskellNixPin = pins.haskell-nix.locked;
+      iohkNixPin = pins.iohk-nix.locked;
+      haskellNixSrc = builtins.fetchTarball {
+        url = "https://github.com/input-output-hk/haskell.nix/archive/${haskellNixPin.rev}.tar.gz";
+        sha256 = haskellNixPin.narHash;
+      };
+      iohkNixSrc = builtins.fetchTarball {
+        url = "https://github.com/input-output-hk/iohk-nix/archive/${iohkNixPin.rev}.tar.gz";
+        sha256 = iohkNixPin.narHash;
+      };
       system = "x86_64-linux";
       flake = ((import inputs.kupo)
         {
           inherit system;
-          # haskellNix = inputs.haskell-nix. ??
-          # iohkNix = inputs.iohk-nix. ??
+          haskellNix = import haskellNixSrc { };
+          iohkNix = import iohkNixSrc { };
         }).flake {};
     in {
       packages.${system}.kupo = flake.packages."kupo:exe:kupo";

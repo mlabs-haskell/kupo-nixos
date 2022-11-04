@@ -227,7 +227,10 @@
     },
     "iohk-nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "haskell-nix",
+          "nixpkgs"
+        ]
       },
       "locked": {
         "lastModified": 1667394105,
@@ -406,20 +409,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1667379994,
-        "narHash": "sha256-PFOg8WHqfKXsIGZtEC0aB+rl8SB1cXvA01ytIudnRh8=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "a704b9029586266f63807f64a6718f1a65b0f83b",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      }
-    },
     "old-ghc-nix": {
       "flake": false,
       "locked": {
@@ -441,7 +430,11 @@
       "inputs": {
         "haskell-nix": "haskell-nix",
         "iohk-nix": "iohk-nix",
-        "kupo": "kupo"
+        "kupo": "kupo",
+        "nixpkgs": [
+          "haskell-nix",
+          "nixpkgs"
+        ]
       }
     },
     "stackage": {

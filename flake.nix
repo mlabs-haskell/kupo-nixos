@@ -1,13 +1,13 @@
 {
   description = "NixOS module for Kupo";
   nixConfig = {
-    extra-experimental-features = [ "nix-command" "flakes"]; # "ca-derivations"];
+    extra-experimental-features = [ "nix-command" "flakes" "ca-derivations"];
     allow-import-from-derivation = "true";
     cores = "1";
     max-jobs = "auto";
     auto-optimise-store = "true";
   };
-  inputs = rec {
+  inputs = {
     haskell-nix.url = "github:input-output-hk/haskell.nix";
     iohk-nix.url = "github:input-output-hk/iohk-nix";
     nixpkgs.follows = "haskell-nix/nixpkgs";
@@ -47,7 +47,6 @@
       };
     };
 }
-
 
 
 

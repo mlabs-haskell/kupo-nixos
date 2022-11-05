@@ -54,7 +54,7 @@
         defaultPackage = packages.kupo;
         nixosModules.kupo = { pkgs, lib, ... }: {
           imports = [ ./kupo-nixos-module.nix ];
-          services.kupo.package = lib.mkDefault self.flake.${system}.packages."kupo";
+          services.kupo.package = lib.mkDefault self.packages.${system}.kupo;
         };
       }
     );

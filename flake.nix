@@ -46,9 +46,9 @@
             })
             .flake {};
 
-    # in flake-utils.lib.eachDefaultSystem (system:
+    in flake-utils.lib.eachDefaultSystem (system:
     # This one I use locally to run `nix flake show`
-    in flake-utils.lib.eachSystem ["x86_64-linux"] (system:
+    # in flake-utils.lib.eachSystem ["x86_64-linux"] (system:
       rec {
         packages.kupo = (mkFlake system).packages."kupo:exe:kupo";
         defaultPackage = packages.kupo;

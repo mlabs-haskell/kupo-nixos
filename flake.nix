@@ -52,10 +52,11 @@
       rec {
         packages.kupo = (mkFlake system).packages."kupo:exe:kupo";
         defaultPackage = packages.kupo;
-        nixosModules.kupo = { pkgs, lib, ... }: {
-          imports = [ ./kupo-nixos-module.nix ];
-          services.kupo.package = lib.mkDefault self.packages.${system}.kupo;
-        };
       }
-    );
+    ) // {
+      nixosModules.kupo = { pkgs, lib, ... }: {
+        imports = [ ./kupo-nixos-module.nix ];
+        services.kupo.package = lib.mkDefault self.packages.${pkgs.system}.kupo;
+      };
+    };
 }

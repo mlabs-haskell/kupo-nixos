@@ -46,16 +46,17 @@
             })
             .flake {};
 
-    in flake-utils.lib.eachDefaultSystem (system:
+    # in flake-utils.lib.eachDefaultSystem (system:
     # This one I use locally to run `nix flake show`
-    # in flake-utils.lib.eachSystem ["x86_64-linux"] (system:
+    in flake-utils.lib.eachSystem ["x86_64-linux"] (system:
       rec {
         packages.kupo = (mkFlake system).packages."kupo:exe:kupo";
         defaultPackage = packages.kupo;
-        nixosModules.kupo = { pkgs, lib, ... }: {
-          imports = [ ./kupo-nixos-module.nix ];
-          services.kupo.package = lib.mkDefault self.packages.${system}.kupo;
-        };
       }
-    );
+    ) // {
+      nixosModules.kupo = { pkgs, lib, ... }: {
+        imports = [ ./kupo-nixos-module.nix ];
+        services.kupo.package = lib.mkDefault self.packages.${pkgs.system}.kupo;
+      };
+    };
 }

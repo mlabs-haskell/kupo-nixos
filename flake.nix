@@ -1,12 +1,12 @@
 {
   description = "NixOS module for Kupo";
-  # nixConfig = {
-  #   extra-experimental-features = [ "nix-command" "flakes" ];
-  #   allow-import-from-derivation = "true";
-  #   cores = "1";
-  #   max-jobs = "auto";
-  #   auto-optimise-store = "true";
-  # };
+  nixConfig = {
+    extra-experimental-features = [ "nix-command" "flakes" ];
+    allow-import-from-derivation = "true";
+    cores = "1";
+    max-jobs = "auto";
+    auto-optimise-store = "true";
+  };
   inputs = {
     # should follow inputs in https://github.com/CardanoSolutions/kupo/blob/master/default.nix#L22
     # haskell-nix.url = github:input-output-hk/haskell.nix/974a61451bb1d41b32090eb51efd7ada026d16d9;

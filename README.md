@@ -4,7 +4,7 @@ A flake and a NixOS module for [Kupo](https://github.com/CardanoSolutions/kupo/)
 
 A sample usage example:
 
-```
+```nix
 { config, lib, pkgs, inputs, ... }@args: {
   imports = with inputs; [
     kupo-nixos.nixosModules.kupo

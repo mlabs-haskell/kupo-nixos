@@ -8,11 +8,10 @@
       url = "github:input-output-hk/cardano-haskell-packages/316e0a626fed1a928e659c7fc2577c7773770f7f";
       flake = false;
     };
-
     nixpkgs.follows = "haskell-nix/nixpkgs";
-    iohk-nix.inputs.nixpkgs.follows = "haskell-nix/nixpkgs";
+    iohk-nix.inputs.nixpkgs.follows = "haskell-nix/nixpkgs-unstable";
     kupo = {
-      url = "github:CardanoSolutions/kupo/v2.4.0";
+      url = "github:CardanoSolutions/kupo/v2.5.0";
       flake = false;
     };
   };

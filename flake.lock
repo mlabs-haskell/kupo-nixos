@@ -401,7 +401,7 @@
       "inputs": {
         "nixpkgs": [
           "haskell-nix",
-          "nixpkgs"
+          "nixpkgs-unstable"
         ]
       },
       "locked": {
@@ -422,16 +422,16 @@
     "kupo": {
       "flake": false,
       "locked": {
-        "lastModified": 1677147835,
-        "narHash": "sha256-2Cn5C38SHfiASKMWZAUuSEN399SneAjIMCLnBg5NN4o=",
+        "lastModified": 1690031065,
+        "narHash": "sha256-n0/YH7vzpU1qerIsMt32xhmhsshscLIA/aXdr03IUI4=",
         "owner": "CardanoSolutions",
         "repo": "kupo",
-        "rev": "e7045a2651cb981613ece0ca86081cb0d939eac8",
+        "rev": "ad305322e8dd878e637b00a00f8d23fd34b94c6e",
         "type": "github"
       },
       "original": {
         "owner": "CardanoSolutions",
-        "ref": "v2.4.0",
+        "ref": "v2.5.0",
         "repo": "kupo",
         "type": "github"
       }

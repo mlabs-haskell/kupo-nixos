@@ -43,6 +43,6 @@
         imports = [ ./kupo-nixos-module.nix ];
         services.kupo.package = lib.mkOptionDefault self.packages.${pkgs.system}.kupo;
       };
-      herculesCI.ciSystems = [ "x86_64-linux" ];
+      herculesCI.ciSystems = [ "x86_64-linux" "aarch64-linux" ];
     };
 }

@@ -18,11 +18,21 @@
   outputs = inputs@{ self, nixpkgs, haskell-nix, cardanoPkgs, ... }:
     let
       perSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
-      pkgs = perSystem (system: import nixpkgs { inherit system; overlays = [ haskell-nix.overlay ]; inherit (haskell-nix) config; });
+      pkgs = perSystem (system: (import nixpkgs { inherit system; overlays = [ haskell-nix.overlay ]; inherit (haskell-nix) config; }));
       project = perSystem (system: pkgs.${system}.haskell-nix.project {
         compiler-nix-name = "ghc8107";
         projectFileName = "cabal.project";
         inputMap = { "https://input-output-hk.github.io/cardano-haskell-packages" = cardanoPkgs; };
+        modules = [({lib, pkgs, ...}: {
+          packages.bench.components.exes.bench.configureFlags = [
+              "--disable-executable-dynamic"
+              "--disable-shared"
+              "--ghc-option=-optl=-pthread"
+              "--ghc-option=-optl=-static"
+              "--ghc-option=-optl=-L${pkgs.gmp6.override { withStatic = true; }}/lib"
+              "--ghc-option=-optl=-L${pkgs.zlib.static}/lib"
+            ];
+        })];
         src = nixpkgs.lib.cleanSourceWith {
           name = "kupo-src";
           src = inputs.kupo;

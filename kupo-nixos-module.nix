@@ -1,9 +1,9 @@
 # NixOS module for kupo service
-{ config, lib, pkgs, ...}:
+{ config, lib, ...}:
 let
-  cfg = config.services.kupo;
+  cfg = config.services.kupo-261;
 in  with lib; {
-  options.services.kupo = with types; {
+  options.services.kupo-261 = with types; {
     enable = mkEnableOption "Kupo - fast, lightweight and configurable chain-index";
 
     package = mkOption {
@@ -83,11 +83,11 @@ in  with lib; {
 #        }
         {
           assertion = lib.hasPrefix workDirBase cfg.workDir;
-          message = "The option services.kupo.workDir should have ${workDirBase} as a prefix!";
+          message = "The option services.kupo-261.workDir should have ${workDirBase} as a prefix!";
         }
       ];
 
-      services.kupo = {
+      services.kupo-261 = {
 #        workDir = mkDefault "/var/lib/kupo";
       }
         # get configuration from cardano-node module if there is one
@@ -100,14 +100,14 @@ in  with lib; {
 #          ));
         };
 
-      users.users.kupo = mkIf (cfg.user == "kupo") {
+      users.users.kupo-261 = mkIf (cfg.user == "kupo-261") {
         isSystemUser = true;
         group = cfg.group;
         extraGroups = [ "cardano-node" ];
       };
-      users.groups.kupo = mkIf (cfg.group == "kupo") { };
+      users.groups.kupo = mkIf (cfg.group == "kupo-261") { };
 
-      systemd.services.kupo = {
+      systemd.services.kupo-261 = {
         enable = true;
         after = [ "cardano-node.service" ];
         wantedBy = [ "multi-user.target" ];

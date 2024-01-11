@@ -1,52 +1,68 @@
 {
   description = "Nix flake for Kupo including a NixOS module";
   inputs = {
-    # should always follow inputs in https://github.com/CardanoSolutions/kupo/blob/master/default.nix
-    haskell-nix.url = "github:input-output-hk/haskell.nix/1b4bccb032d5a32fee0f5b7872660c017a0748d";
-    iohk-nix.url = "github:input-output-hk/iohk-nix/4b342603a36edacc9610139db8d1b6f77cd272c7";
-    cardanoPkgs = {
-      url = "github:input-output-hk/cardano-haskell-packages/4278da8003518bcd3707c079639a55b58b77294";
-      flake = false;
-    };
-    nixpkgs.follows = "haskell-nix/nixpkgs-unstable";
+    iogx.url = "github:input-output-hk/iogx";
     kupo = {
-      url = "github:mlabs-haskell/kupo/aciceri/fix-nix-build";
+      url = "github:CardanoSolutions/kupo";
       flake = false;
     };
   };
-  outputs = inputs@{ self, nixpkgs, haskell-nix, iohk-nix, cardanoPkgs, ... }:
+  outputs = inputs@{ self, ... }:
     let
-      perSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin" ];
-      # FIXME should use pkgs.pkgsCross.musl64 to be 100% coherent with upstream
-      pkgs = perSystem (system: (import nixpkgs { inherit system; overlays = [haskell-nix.overlay iohk-nix.overlays.crypto iohk-nix.overlays.haskell-nix-crypto]; inherit (haskell-nix) config; }));
-      project = perSystem (system: pkgs.${system}.haskell-nix.project {
-        compiler-nix-name = "ghc8107";
-        projectFileName = "cabal.project";
-        inputMap = { "https://input-output-hk.github.io/cardano-haskell-packages" = cardanoPkgs; };
-        sha256map = {
-          "https://github.com/CardanoSolutions/direct-sqlite.git"."82c5ab46715ecd51901256144f1411b480e2cb8b" = "fuKhPnIVsmdbQ2gPBTzp9nI/3/BTsnvNIDa1Ypw1L+Q=";
-          "https://github.com/CardanoSolutions/text-ansi.git"."dd81fe6b30e78e95589b29fd1b7be1c18bd6e700" = "mCFkVltVeOpDfEkQwClEXFAiOV8lSejmrFBRQhmeLDE=";
-        };
-        src = nixpkgs.lib.cleanSourceWith {
-          name = "kupo-src";
-          src = inputs.kupo;
-          filter = path: type:
-            builtins.all (x: x) [
-              (baseNameOf path != "package.yaml")
-            ];
-        };
-      });
-      flake = perSystem (system: project.${system}.flake { });
-    in
-    {
-      packages = perSystem (system: {
-        kupo = flake.${system}.packages."kupo:exe:kupo";
-        default = self.packages.${system}.kupo;
-      });
-      nixosModules.kupo = { pkgs, lib, ... }: {
-        imports = [ ./kupo-nixos-module.nix ];
-        services.kupo.package = lib.mkOptionDefault self.packages.${pkgs.system}.kupo;
+      # TODO enable kupo supported OS's
+      systems = [ "x86_64-linux" ];
+      ciSystems = systems;
+      hs-kupo = { lib, pkgs, inputs, ... }: lib.iogx.mkHaskellProject {
+        cabalProject = pkgs.haskell-nix.cabalProject'
+          {
+            src = pkgs.haskell-nix.haskellLib.cleanSourceWith {
+              name = "kupo-src";
+              src = inputs.kupo;
+              filter = path: type:
+                builtins.all (x: x) [
+                  (baseNameOf path != "package.yaml")
+                ];
+            };
+            # `compiler-nix-name` upgrade policy: as soon as inputs.kupo
+            compiler-nix-name = lib.mkDefault "ghc96";
+            inputMap = {
+              "https://input-output-hk.github.io/cardano-haskell-packages" = inputs.iogx.inputs.CHaP;
+            };
+            sha256map = {
+              "https://github.com/CardanoSolutions/ogmios"."01f7787216e7ceb8e39c8c6807f7ae53fc14ab9e" = "1TU3IYTzm7h/wpt/fkHbaR0esVhyHKNtdCJpjsferZo=";
+              "https://github.com/CardanoSolutions/direct-sqlite"."82c5ab46715ecd51901256144f1411b480e2cb8b" = "fuKhPnIVsmdbQ2gPBTzp9nI/3/BTsnvNIDa1Ypw1L+Q=";
+              "https://github.com/CardanoSolutions/text-ansi"."e204822d2f343b2d393170a2ec46ee935571345c" = "e6EINXr5Tfx5vzSY+wmGt/7seIdkM1WM7Tvy4zQ/cZo=";
+            };
+          };
       };
-      herculesCI.ciSystems = [ "x86_64-linux" ];
+      nixos-kupo = { pkgs, lib, ... }: {
+        flake.nixosModules.kupo = {
+          imports = [ ./kupo-nixos-module.nix ];
+          services.kupo.package = lib.mkOptionDefault pkgs.kupo;
+        };
+      };
+    in
+    inputs.iogx.lib.mkFlake {
+      inherit inputs systems;
+      outputs = c@{ system, ... }: [
+        (hs-kupo c)
+        (nixos-kupo c)
+        {
+          packages.default = self.packages.${system}.kupo;
+        }
+      ];
+      flake.herculesCI = {
+        inherit ciSystems;
+      };
     };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://cache.iog.io"
+    ];
+    extra-trusted-public-keys = [
+      "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
+    ];
+    allow-import-from-derivation = true;
+  };
 }

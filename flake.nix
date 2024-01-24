@@ -3,7 +3,7 @@
   inputs = {
     iogx.url = "github:input-output-hk/iogx";
     kupo = {
-      url = "github:CardanoSolutions/kupo";
+      url = "github:Fourierlabs/kupo";
       flake = false;
     };
   };

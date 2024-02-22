@@ -11,7 +11,7 @@ inputs: outputs: {
         package = mkOption {
           description = "Kupo package.";
           type = package;
-          default = lib.mkOptionDefault outputs.packages.x86_64-linux.kupo;
+          default = outputs.packages.x86_64-linux.kupo;
         };
 
         user = mkOption {

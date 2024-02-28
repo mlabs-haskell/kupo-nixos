@@ -3,7 +3,7 @@
   inputs = {
     iogx.url = "github:input-output-hk/iogx";
     kupo = {
-      url = "github:Fourierlabs/kupo";
+      url = "github:CardanoSolutions/kupo";
       flake = false;
     };
   };
@@ -18,6 +18,7 @@
       inherit inputs systems;
       repoRoot = ./.;
       outputs = import ./nix/outputs.nix;
+      #outputs = _: [ ];
       flake = {
         inherit (nixos) nixosModules;
         herculesCI = {

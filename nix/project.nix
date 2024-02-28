@@ -16,7 +16,8 @@
       };
       sha256map = {
         "https://github.com/CardanoSolutions/ogmios"."01f7787216e7ceb8e39c8c6807f7ae53fc14ab9e" = "1TU3IYTzm7h/wpt/fkHbaR0esVhyHKNtdCJpjsferZo=";
-        "https://github.com/CardanoSolutions/direct-sqlite"."82c5ab46715ecd51901256144f1411b480e2cb8b" = "fuKhPnIVsmdbQ2gPBTzp9nI/3/BTsnvNIDa1Ypw1L+Q=";
+        "https://github.com/CardanoSolutions/sqlite-simple"."08015be2ee52a7e67159b6b0c476bd3e0a2e0b87" = "yuKhPnIVsmdbQ2gPBTzp9nI/3/BTsnvNIDa1Ypw1L+Q=";
+        "https://github.com/CardanoSolutions/direct-sqlite"."2b14a78cb73805e2e5d84354230e872a223faa39" = "fuKhPnIVsmdbQ2gPBTzp9nI/3/BTsnvNIDa1Ypw1L+Q=";
         "https://github.com/CardanoSolutions/text-ansi"."e204822d2f343b2d393170a2ec46ee935571345c" = "e6EINXr5Tfx5vzSY+wmGt/7seIdkM1WM7Tvy4zQ/cZo=";
       };
       modules = [
